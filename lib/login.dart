@@ -106,7 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                 )
                 : uniButton(
                   context,
-                  title: "LOGIN",
+                  title: Text("Login", style: kanit16semiBoldMainWhite),
+                  warna: mainColor,
                   func: () {
                     procedLogin(context);
                   },

@@ -86,7 +86,8 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             uniButton(
               context,
-              title: "Register",
+              title: Text("Register", style: kanit16semiBoldMainWhite),
+              warna: mainColor,
               func: () async {
                 bool status = await UserService().register(
                   email: _email.text,

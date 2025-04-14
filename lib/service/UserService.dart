@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:absenku/model/AuthModel.dart';
+import 'package:absenku/model/ProfileModel.dart';
 import 'package:absenku/service/api.dart';
 import 'package:absenku/service/pref_handler.dart';
 import 'package:absenku/utils/toast.dart';
@@ -53,5 +54,23 @@ class UserService {
       return false;
     }
     return false;
+  }
+
+  //
+  Future<ProfileModel> getProfile({required String token}) async {
+    try {
+      final res = await dio.get(
+        "${UrlData.url}/api/profile",
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+      return ProfileModel.fromJson(res.data);
+    } catch (e) {
+      return ProfileModel.fromJson({});
+    }
   }
 }
