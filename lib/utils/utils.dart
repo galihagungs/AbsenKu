@@ -11,21 +11,52 @@ TextStyle poppins16italic = GoogleFonts.poppins(
   fontWeight: FontWeight.w300,
   fontStyle: FontStyle.italic,
 );
+TextStyle kanit14Normal = GoogleFonts.kanit(
+  fontSize: 14,
+  fontWeight: FontWeight.w300,
+);
+TextStyle kanit14Bold = GoogleFonts.kanit(
+  fontSize: 14,
+  fontWeight: FontWeight.w700,
+);
 TextStyle kanit30bold = GoogleFonts.kanit(
   fontSize: 30,
   fontWeight: FontWeight.w700,
 );
+TextStyle kanit25boldMain = GoogleFonts.kanit(
+  fontSize: 25,
+  fontWeight: FontWeight.w700,
+  color: mainColor,
+);
 TextStyle kanit25bold = GoogleFonts.kanit(
   fontSize: 25,
   fontWeight: FontWeight.w700,
-  color: Color(0xff006dbf),
 );
 TextStyle kanit16normal = GoogleFonts.kanit(
   fontSize: 16,
   fontWeight: FontWeight.w300,
 );
+TextStyle kanit16normalgrey = GoogleFonts.kanit(
+  fontSize: 16,
+  fontWeight: FontWeight.w300,
+  color: Colors.grey.shade500,
+);
+TextStyle kanit16normalMain = GoogleFonts.kanit(
+  fontSize: 16,
+  fontWeight: FontWeight.w300,
+  color: mainColor,
+);
+TextStyle kanit16semiBoldMainWhite = GoogleFonts.kanit(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.white,
+);
 TextStyle kanit20normalWhite = GoogleFonts.kanit(
   fontSize: 20,
   fontWeight: FontWeight.w300,
   color: Colors.white,
+);
+TextStyle kanit20Bold = GoogleFonts.kanit(
+  fontSize: 20,
+  fontWeight: FontWeight.w700,
 );

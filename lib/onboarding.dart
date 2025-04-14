@@ -1,4 +1,6 @@
+import 'package:absenku/homepage.dart';
 import 'package:absenku/login.dart';
+import 'package:absenku/service/pref_handler.dart';
 import 'package:absenku/utils/utils.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,25 @@ class OnboardingPage extends StatefulWidget {
 
 class _OnboardingPageState extends State<OnboardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
+
+  @override
+  void initState() {
+    super.initState();
+    initUser();
+  }
+
+  void initUser() async {
+    var user = await PreferenceHandler.getId();
+    var token = await PreferenceHandler.getToken();
+    if (user != '' && token != '') {
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => Homepage()),
+      );
+    }
+  }
+
   void _onIntroEnd(context) {
     Navigator.of(
       context,
@@ -22,19 +43,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    // const bodyStyle = TextStyle(fontSize: 19.0);
-    // const pageDecoration = PageDecoration(
-    //   titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-    //   bodyTextStyle: bodyStyle,
-    //   bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-    //   pageColor: Colors.white,
-    //   imagePadding: EdgeInsets.zero,
-    // );
     return IntroductionScreen(
       key: introKey,
       globalBackgroundColor: bgColor,
       allowImplicitScrolling: true,
-      autoScrollDuration: 3000,
+      autoScrollDuration: 8000,
 
       pages: [
         PageViewModel(
@@ -80,7 +93,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   Lottie.asset(
                     'assets/images/onboarding2.json',
                     width: 350,
-                    repeat: false,
                     fit: BoxFit.fitWidth,
                   ),
                   SizedBox(
@@ -111,12 +123,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
           decoration: PageDecoration(bodyAlignment: Alignment.center),
           bodyWidget: Column(
             children: [
-              // SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               Image.asset('assets/images/logonobox.png', width: 300),
-              Text("This is the solution for you", style: kanit25bold),
+              Text("This is the solution for you", style: kanit25boldMain),
               SizedBox(height: 50),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _onIntroEnd(context);
+                },
                 style: ButtonStyle(
                   shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
@@ -149,11 +162,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
-        activeSize: const Size(20.0, 10.0),
+        activeSize: const Size(10.0, 10.0),
         activeColor: mainColor,
         color: Colors.black26,
 
-        spacing: const EdgeInsets.symmetric(horizontal: 0.5),
+        spacing: const EdgeInsets.symmetric(horizontal: 2),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.0),
         ),
