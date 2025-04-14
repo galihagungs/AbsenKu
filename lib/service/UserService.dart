@@ -10,7 +10,6 @@ class UserService {
   final dio = Dio();
   Future<bool> login({required String email, required String password}) async {
     try {
-      //  var uri = Uri.parse("${UrlData.url}/api/login");
       final res = await dio.post(
         "${UrlData.url}/api/login",
         data: {"email": email, "password": password},
