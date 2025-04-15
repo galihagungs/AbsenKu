@@ -57,7 +57,8 @@ class UserService {
   }
 
   //
-  Future<ProfileModel> getProfile({required String token}) async {
+  Future<ProfileModel> getProfile() async {
+    String token = await PreferenceHandler.getToken();
     try {
       final res = await dio.get(
         "${UrlData.url}/api/profile",
@@ -69,7 +70,8 @@ class UserService {
         ),
       );
       return ProfileModel.fromJson(res.data);
-    } catch (e) {
+    } on DioException catch (e) {
+      showToast(e.response!.data['message'], success: false);
       return ProfileModel.fromJson({});
     }
   }

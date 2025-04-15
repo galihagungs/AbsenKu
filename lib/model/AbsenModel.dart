@@ -2,6 +2,7 @@ class absenModel {
   String? message;
   int? statusCode;
   Data? data;
+  List<Data>? listdata;
 
   absenModel({this.message, this.data});
 
@@ -9,6 +10,16 @@ class absenModel {
     message = json['message'];
     statusCode = status;
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  absenModel.fromListJson(Map<String, dynamic> json) {
+    message = json['message'];
+    if (json['data'] != null) {
+      listdata = <Data>[];
+      json['data'].forEach((v) {
+        listdata!.add(new Data.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {

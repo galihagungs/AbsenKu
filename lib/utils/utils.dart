@@ -84,3 +84,8 @@ TextStyle kanit20Bold = GoogleFonts.kanit(
   fontSize: 20,
   fontWeight: FontWeight.w700,
 );
+TextStyle kanit20BoldMain = GoogleFonts.kanit(
+  fontSize: 20,
+  fontWeight: FontWeight.w700,
+  color: mainColor,
+);

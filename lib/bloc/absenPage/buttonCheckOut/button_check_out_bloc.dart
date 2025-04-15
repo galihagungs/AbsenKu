@@ -12,10 +12,11 @@ class ButtonCheckOutBloc
     on<ButtonCheckOutEvent>((event, emit) async {
       if (event is CheckOut) {
         emit(ButtonCheckOutLoading());
-        absenModel data = await Absenservice().absenMasuk(
+        absenModel data = await Absenservice().absenKeluar(
           lat: event.lat,
           long: event.long,
           addres: event.addres,
+          latLong: event.currentLatLong,
         );
 
         emit(ButtonCheckOutSucsess(model: data));

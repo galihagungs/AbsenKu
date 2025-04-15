@@ -1,7 +1,8 @@
-import 'package:absenku/bloc/homepage/absenPage/absenPageBloc/absen_page_bloc.dart';
-import 'package:absenku/bloc/homepage/absenPage/buttonCheckOut/button_check_out_bloc.dart';
-import 'package:absenku/bloc/homepage/absenPage/buttonCheckin/button_check_in_bloc.dart';
-import 'package:absenku/bloc/homepage/userHomepage/user_home_page_bloc.dart';
+import 'package:absenku/bloc/absenPage/absenPageBloc/absen_page_bloc.dart';
+import 'package:absenku/bloc/absenPage/buttonCheckOut/button_check_out_bloc.dart';
+import 'package:absenku/bloc/absenPage/buttonCheckin/button_check_in_bloc.dart';
+import 'package:absenku/bloc/userHomepage/historyHome/history_absen_home_bloc.dart';
+import 'package:absenku/bloc/userHomepage/userprofile/user_home_page_bloc.dart';
 import 'package:absenku/onboarding.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AbsenPageBloc()),
         BlocProvider(create: (context) => ButtonCheckInBloc()),
         BlocProvider(create: (context) => ButtonCheckOutBloc()),
+        BlocProvider(create: (context) => HistoryAbsenHomeBloc()),
       ],
       child: MaterialApp(
         title: 'AbsenKu',

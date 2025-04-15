@@ -11,7 +11,9 @@ class UserHomePageBloc extends Bloc<UserHomePageEvent, UserHomePageState> {
     on<UserHomePageEvent>((event, emit) async {
       if (event is GetUser) {
         emit(UserHomePageLoading());
-        ProfileModel data = await UserService().getProfile(token: event.token);
+
+        ProfileModel data = await UserService().getProfile();
+        print(data.message);
         emit(UserHomePageSuccses(data: data));
       }
     });

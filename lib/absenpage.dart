@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:absenku/bloc/homepage/absenPage/absenPageBloc/absen_page_bloc.dart';
-import 'package:absenku/bloc/homepage/absenPage/buttonCheckOut/button_check_out_bloc.dart';
-import 'package:absenku/bloc/homepage/absenPage/buttonCheckin/button_check_in_bloc.dart';
+import 'package:absenku/bloc/absenPage/absenPageBloc/absen_page_bloc.dart';
+import 'package:absenku/bloc/absenPage/buttonCheckOut/button_check_out_bloc.dart';
+import 'package:absenku/bloc/absenPage/buttonCheckin/button_check_in_bloc.dart';
 import 'package:absenku/homepage.dart';
 import 'package:absenku/service/pref_handler.dart';
 import 'package:absenku/utils/utils.dart';
@@ -64,7 +64,7 @@ class _AbsenpageState extends State<Absenpage> {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.625,
                   margin: EdgeInsets.only(top: 40),
 
                   child: GoogleMap(
