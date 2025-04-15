@@ -1,12 +1,19 @@
 class AuthModel {
   String? message;
   Data? data;
+  Errors? errors;
 
   AuthModel({this.message, this.data});
 
   AuthModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  AuthModel.fromErrorJson(Map<String, dynamic> json) {
+    message = json['message'];
+    errors =
+        json['errors'] != null ? new Errors.fromJson(json['errors']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +71,22 @@ class User {
     data['updated_at'] = this.updatedAt;
     data['created_at'] = this.createdAt;
     data['id'] = this.id;
+    return data;
+  }
+}
+
+class Errors {
+  List<String>? email;
+
+  Errors({this.email});
+
+  Errors.fromJson(Map<String, dynamic> json) {
+    email = json['email'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['email'] = this.email;
     return data;
   }
 }

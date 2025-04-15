@@ -1,15 +1,13 @@
+import 'package:absenku/absenpage.dart';
 import 'package:absenku/bloc/homepage/userHomepage/user_home_page_bloc.dart';
 import 'package:absenku/onboarding.dart';
 import 'package:absenku/service/UserService.dart';
-import 'package:absenku/service/geo_service.dart';
 import 'package:absenku/service/pref_handler.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:absenku/utils/wiget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:one_clock/one_clock.dart';
@@ -25,10 +23,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   DateFormat dateFormat = DateFormat("EEEE, dd MMMM yyyy");
   String token = "";
-  String _currentAddress = "Unknown";
-  String _currentLatLong = "Unknown";
-  double _currentLat = 0;
-  double _currentLong = 0;
+
   @override
   void initState() {
     super.initState();
@@ -39,35 +34,6 @@ class _HomepageState extends State<Homepage> {
   void initUser() async {
     // await PreferenceHandler.getId();
     token = await PreferenceHandler.getToken();
-    _fetchLocation();
-  }
-
-  Future<void> _fetchLocation() async {
-    LatLng userLocation = await determineUserLocation();
-    await _getAddressFromLatLng(userLocation);
-  }
-
-  Future<void> _getAddressFromLatLng(LatLng position) async {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks.first;
-        setState(() {
-          _currentAddress =
-              "${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea}, ${place.country}, ${place.postalCode}, ${place.country}, ${place.isoCountryCode}";
-          _currentLatLong = "${position.latitude}, ${position.longitude}";
-          _currentLat = position.latitude;
-          _currentLong = position.longitude;
-          print(_currentAddress);
-        });
-      }
-    } catch (e) {
-      print("Error reverse geocoding: $e");
-    }
   }
 
   @override
@@ -231,7 +197,12 @@ class _HomepageState extends State<Homepage> {
                       context,
                       title: Text("Absen", style: kanit16BoldMain),
                       warna: Colors.white,
-                      func: () {},
+                      func: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Absenpage()),
+                        );
+                      },
                     ),
                   ),
                 ),
