@@ -1,12 +1,17 @@
 import 'package:absenku/absenpage.dart';
-import 'package:absenku/bloc/userHomepage/historyHome/history_absen_home_bloc.dart';
+import 'package:absenku/bloc/userHomepage/Home/history_absen_home_bloc.dart';
+import 'package:absenku/bloc/userHomepage/deleteIzin/delete_izin_bloc.dart';
+import 'package:absenku/bloc/userHomepage/izin/button_izin_bloc.dart';
 import 'package:absenku/bloc/userHomepage/userprofile/user_home_page_bloc.dart';
 import 'package:absenku/onboarding.dart';
+import 'package:absenku/profile.dart';
 import 'package:absenku/service/UserService.dart';
 import 'package:absenku/service/absenService.dart';
 import 'package:absenku/service/pref_handler.dart';
+import 'package:absenku/utils/toast.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:absenku/utils/wiget.dart';
+import 'package:dio/dio.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +28,10 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  TextEditingController alasanIzin = TextEditingController();
   DateFormat dateFormat = DateFormat("EEEE, dd MMMM yyyy");
+  DateFormat dateFormatDay = DateFormat("EEEE");
+  DateFormat dateFormatTanggal = DateFormat("dd MMMM yyyy");
   List<Map<String, dynamic>> menuList = [
     {
       "name": "Profile",
@@ -38,12 +46,11 @@ class _HomepageState extends State<Homepage> {
       "icon": Icon(FluentIcons.calendar_20_filled, color: mainColor),
     },
   ];
-  // List iconList = ["Profile", "Izin", "Kalender"];
 
   @override
   void initState() {
     super.initState();
-    context.read<UserHomePageBloc>().add(GetUser());
+    context.read<UserHomePageBloc>().add(SetupData());
     context.read<HistoryAbsenHomeBloc>().add(GetData());
   }
 
@@ -155,12 +162,21 @@ class _HomepageState extends State<Homepage> {
                           Expanded(
                             child: IconButton(
                               onPressed: () {
-                                PreferenceHandler.removeId();
-                                Navigator.pushReplacement(
+                                popAlert(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => OnboardingPage(),
-                                  ),
+                                  alertText: "Apakah anda yakin ingin logout ?",
+                                  funcYes: () {
+                                    PreferenceHandler.removeToken();
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OnboardingPage(),
+                                      ),
+                                    );
+                                  },
+                                  funcNo: () {
+                                    Navigator.pop(context);
+                                  },
                                 );
                               },
                               icon: Icon(
@@ -196,9 +212,23 @@ class _HomepageState extends State<Homepage> {
                               textScaleFactor: 1.3,
                               isLive: true,
                             ),
-                            Text(
-                              dateFormat.format(DateTime.now()),
-                              style: kanit16normal,
+                            SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                dateFormatDay.format(DateTime.now()),
+                                style: kanit16BoldMain,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 50),
+                                child: Text(
+                                  dateFormatTanggal.format(DateTime.now()),
+                                  style: kanit16BoldMain,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -213,7 +243,7 @@ class _HomepageState extends State<Homepage> {
                           title: Text("Absen", style: kanit16BoldMain),
                           warna: Colors.white,
                           func: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Absenpage(),
@@ -253,7 +283,22 @@ class _HomepageState extends State<Homepage> {
 
                         itemBuilder: (context, index) {
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              switch (index) {
+                                case 0:
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Profile(),
+                                    ),
+                                  );
+                                  break;
+                                case 1:
+                                  izinPOP(context);
+                                  break;
+                                default:
+                              }
+                            },
                             child: SizedBox(
                               width: 100,
                               height: 100,
@@ -280,16 +325,6 @@ class _HomepageState extends State<Homepage> {
                             alignment: Alignment.centerLeft,
                             child: Text("History", style: kanit20BoldMain),
                           ),
-                          // Text(DateTime.now().toString()),
-                          // Text(
-                          //   DateTime.now().add(Duration(days: -1)).toString(),
-                          // ),
-                          // ElevatedButton(
-                          //   onPressed: () {
-                          //     Absenservice().getHistoryHome();
-                          //   },
-                          //   child: Text("Test"),
-                          // ),
                           BlocBuilder<
                             HistoryAbsenHomeBloc,
                             HistoryAbsenHomeState
@@ -310,6 +345,7 @@ class _HomepageState extends State<Homepage> {
                                     itemCount: state.data.listdata!.length,
                                     itemBuilder: (context, index) {
                                       return Container(
+                                        margin: EdgeInsets.only(bottom: 15),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.circular(
@@ -324,131 +360,278 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         width: double.infinity,
                                         height: 130,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                dateFormat.format(
-                                                  DateTime.parse(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  16.0,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      dateFormat.format(
+                                                        DateTime.parse(
+                                                          state
+                                                              .data
+                                                              .listdata![index]
+                                                              .checkIn!,
+                                                        ),
+                                                      ),
+                                                      style: kanit16Bold,
+                                                    ),
+                                                    Text(
+                                                      state
+                                                          .data
+                                                          .listdata![index]
+                                                          .status
+                                                          .toString()
+                                                          .toUpperCase(),
+                                                      style: kanit16Bold,
+                                                    ),
+
+                                                    // Text(
+                                                    //   state.data.data!.id.toString(),
+                                                    // ),
                                                     state
-                                                        .data
-                                                        .listdata![index]
-                                                        .checkIn!,
+                                                                .data
+                                                                .listdata![index]
+                                                                .status ==
+                                                            "izin"
+                                                        ? Text(
+                                                          state
+                                                              .data
+                                                              .listdata![index]
+                                                              .alasanIzin
+                                                              .toString(),
+                                                          style: kanit16Bold,
+                                                        )
+                                                        : Column(
+                                                          children: [
+                                                            state
+                                                                        .data
+                                                                        .listdata![index]
+                                                                        .checkIn ==
+                                                                    null
+                                                                ? Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: 15,
+                                                                      height:
+                                                                          15,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              7,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.redAccent,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Text(
+                                                                      "Absen Masuk",
+                                                                      style:
+                                                                          kanit16Bold,
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                                : Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: 15,
+                                                                      height:
+                                                                          15,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              7,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.green,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Text(
+                                                                      "Absen Masuk",
+                                                                      style:
+                                                                          kanit16Bold,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                            state
+                                                                        .data
+                                                                        .listdata![index]
+                                                                        .checkOut ==
+                                                                    null
+                                                                ? Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: 15,
+                                                                      height:
+                                                                          15,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              7,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.redAccent,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Text(
+                                                                      "Absen Keluar",
+                                                                      style:
+                                                                          kanit16Bold,
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                                : Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: 15,
+                                                                      height:
+                                                                          15,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              7,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.green,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Text(
+                                                                      "Absen Keluar",
+                                                                      style:
+                                                                          kanit16Bold,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                          ],
+                                                        ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  16.0,
+                                                ),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      popAlert(
+                                                        context,
+                                                        alertText:
+                                                            "Apa anda yakin menghapus absen ini?",
+                                                        funcYes: () {
+                                                          // context
+                                                          //     .read<
+                                                          //       DeleteIzinBloc
+                                                          //     >()
+                                                          //     .add(
+                                                          //       DeleteIzin(
+                                                          //         idAbsen: int.parse(
+                                                          //           state
+                                                          //               .data
+                                                          //               .listdata![index]
+                                                          //               .id
+                                                          //               .toString(),
+                                                          //         ),
+                                                          //       ),
+                                                          //     );
+
+                                                          // showToast(),
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+
+                                                          context
+                                                              .read<
+                                                                HistoryAbsenHomeBloc
+                                                              >()
+                                                              .add(GetData());
+                                                        },
+                                                        funcNo: () {
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                    icon: Icon(
+                                                      FluentIcons
+                                                          .delete_20_filled,
+                                                      color: Colors.redAccent,
+                                                    ),
                                                   ),
                                                 ),
-                                                style: kanit16normalBold,
                                               ),
-                                              Text(
-                                                state
-                                                    .data
-                                                    .listdata![index]
-                                                    .status
-                                                    .toString()
-                                                    .toUpperCase(),
-                                                style: kanit16normalBold,
-                                              ),
-
-                                              state
-                                                          .data
-                                                          .listdata![index]
-                                                          .checkIn ==
-                                                      null
-                                                  ? Row(
-                                                    children: [
-                                                      Container(
-                                                        width: 15,
-                                                        height: 15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                7,
-                                                              ),
-                                                          color:
-                                                              Colors.redAccent,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Text(
-                                                        "Absen Masuk",
-                                                        style:
-                                                            kanit16normalBold,
-                                                      ),
-                                                    ],
-                                                  )
-                                                  : Row(
-                                                    children: [
-                                                      Container(
-                                                        width: 15,
-                                                        height: 15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                7,
-                                                              ),
-                                                          color: Colors.green,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Text(
-                                                        "Absen Masuk",
-                                                        style:
-                                                            kanit16normalBold,
-                                                      ),
-                                                    ],
-                                                  ),
-                                              state
-                                                          .data
-                                                          .listdata![index]
-                                                          .checkOut ==
-                                                      null
-                                                  ? Row(
-                                                    children: [
-                                                      Container(
-                                                        width: 15,
-                                                        height: 15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                7,
-                                                              ),
-                                                          color:
-                                                              Colors.redAccent,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Text(
-                                                        "Absen Keluar",
-                                                        style:
-                                                            kanit16normalBold,
-                                                      ),
-                                                    ],
-                                                  )
-                                                  : Row(
-                                                    children: [
-                                                      Container(
-                                                        width: 15,
-                                                        height: 15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                7,
-                                                              ),
-                                                          color: Colors.green,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Text(
-                                                        "Absen Keluar",
-                                                        style:
-                                                            kanit16normalBold,
-                                                      ),
-                                                    ],
-                                                  ),
-                                            ],
-                                          ),
+                                            ),
+                                            // BlocListener<
+                                            //   DeleteIzinBloc,
+                                            //   DeleteIzinState
+                                            // >(
+                                            //   listener: (context, state) {
+                                            //     if (state
+                                            //         is DeleteIzinLoading) {
+                                            //       showDialog(
+                                            //         context: context,
+                                            //         builder: (
+                                            //           BuildContext context,
+                                            //         ) {
+                                            //           return Dialog(
+                                            //             backgroundColor:
+                                            //                 Colors.transparent,
+                                            //             insetPadding:
+                                            //                 EdgeInsets.all(20),
+                                            //             child: Container(
+                                            //               width:
+                                            //                   double.infinity,
+                                            //               height: 320,
+                                            //               decoration: BoxDecoration(
+                                            //                 borderRadius:
+                                            //                     BorderRadius.circular(
+                                            //                       15,
+                                            //                     ),
+                                            //                 color: Colors.white,
+                                            //               ),
+                                            //               padding:
+                                            //                   EdgeInsets.fromLTRB(
+                                            //                     20,
+                                            //                     50,
+                                            //                     20,
+                                            //                     20,
+                                            //                   ),
+                                            //             ),
+                                            //           );
+                                            //         },
+                                            //       );
+                                            //     } else if (state
+                                            //         is DeleteIzinSuccess) {
+                                            //       Navigator.pop(context);
+                                            //     }
+                                            //   },
+                                            //   child: Container(),
+                                            // ),
+                                          ],
                                         ),
                                       );
                                     },
@@ -470,6 +653,214 @@ class _HomepageState extends State<Homepage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> izinPOP(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: Container(
+            width: double.infinity,
+            height: 320,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Image.asset("assets/images/agreement.png", width: 40),
+                    SizedBox(width: 10),
+                    Text("Izin", style: kanit20BoldMain),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text("Alasan Izin", style: kanit16BoldMain),
+                SizedBox(height: 10),
+                TextField(
+                  controller: alasanIzin,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+
+                    hintStyle: kanit16normal,
+                    hintText: "Alasan",
+                  ),
+                ),
+                SizedBox(height: 20),
+                BlocConsumer<ButtonIzinBloc, ButtonIzinState>(
+                  listener: (context, state) {
+                    if (state is ButtonIzinSuccses) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            backgroundColor: Colors.transparent,
+                            insetPadding: EdgeInsets.all(20),
+                            child: Container(
+                              width: double.infinity,
+                              height: 320,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+                              child: Column(
+                                children: [
+                                  state.absenData.statusCode == 200
+                                      ? Lottie.asset(
+                                        'assets/images/check.json',
+                                        width: 100,
+                                        repeat: false,
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                      : Lottie.asset(
+                                        'assets/images/alert.json',
+                                        width: 100,
+                                        repeat: false,
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                  SizedBox(height: 15),
+                                  Text(
+                                    state.absenData.message.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: kanit20Bold,
+                                  ),
+                                  SizedBox(height: 25),
+                                  Expanded(
+                                    child: uniButton(
+                                      context,
+                                      title: Text(
+                                        "OK",
+                                        style: kanit16normalWhite,
+                                      ),
+                                      func: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        context
+                                            .read<HistoryAbsenHomeBloc>()
+                                            .add(GetData());
+                                      },
+                                      warna: mainColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is ButtonIzinLoading) {
+                      return Center(
+                        child: Lottie.asset(
+                          'assets/images/loadinganimation.json',
+                          width: 50,
+                          repeat: false,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      );
+                    }
+                    return uniButton(
+                      context,
+                      title: Text("Submit", style: kanit16normalWhite),
+                      func: () {
+                        context.read<ButtonIzinBloc>().add(
+                          CommitData(alasanIzin: alasanIzin.text),
+                        );
+                      },
+                      warna: mainColor,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<dynamic> popAlert(
+    BuildContext context, {
+    required String alertText,
+    required VoidCallback funcYes,
+    required VoidCallback funcNo,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: Container(
+            width: double.infinity,
+            height: 330,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              children: [
+                Lottie.asset(
+                  'assets/images/alert.json',
+                  width: 100,
+                  repeat: false,
+                  fit: BoxFit.fitWidth,
+                ),
+                SizedBox(height: 15),
+                Text(
+                  alertText,
+                  style: kanit20Bold,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 25),
+                Row(
+                  children: [
+                    Expanded(
+                      child: uniButton(
+                        context,
+                        title: Text("Ya", style: kanit16normalWhite),
+                        func: funcYes,
+                        warna: mainColor,
+                      ),
+                    ),
+                    SizedBox(width: 25),
+                    Expanded(
+                      child: uniButton(
+                        context,
+                        title: Text("Tidak", style: kanit16normalWhite),
+                        func: funcNo,
+                        warna: mainColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

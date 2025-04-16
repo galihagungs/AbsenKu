@@ -9,11 +9,11 @@ part 'user_home_page_state.dart';
 class UserHomePageBloc extends Bloc<UserHomePageEvent, UserHomePageState> {
   UserHomePageBloc() : super(UserHomePageInitial()) {
     on<UserHomePageEvent>((event, emit) async {
-      if (event is GetUser) {
+      if (event is SetupData) {
         emit(UserHomePageLoading());
 
         ProfileModel data = await UserService().getProfile();
-        print(data.message);
+        // print(data.message);
         emit(UserHomePageSuccses(data: data));
       }
     });

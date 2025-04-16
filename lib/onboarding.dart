@@ -24,9 +24,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void initUser() async {
-    var user = await PreferenceHandler.getId();
     var token = await PreferenceHandler.getToken();
-    if (user != '' && token != '') {
+    if (token != '') {
       Navigator.pushReplacement(
         // ignore: use_build_context_synchronously
         context,

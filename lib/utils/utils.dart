@@ -41,10 +41,11 @@ TextStyle kanit16normal = GoogleFonts.kanit(
   fontSize: 16,
   fontWeight: FontWeight.w300,
 );
-TextStyle kanit16normalBold = GoogleFonts.kanit(
+TextStyle kanit16Bold = GoogleFonts.kanit(
   fontSize: 16,
   fontWeight: FontWeight.w700,
 );
+
 TextStyle kanit16normalBoldWhite = GoogleFonts.kanit(
   fontSize: 16,
   fontWeight: FontWeight.w700,
@@ -87,5 +88,10 @@ TextStyle kanit20Bold = GoogleFonts.kanit(
 TextStyle kanit20BoldMain = GoogleFonts.kanit(
   fontSize: 20,
   fontWeight: FontWeight.w700,
+  color: mainColor,
+);
+TextStyle kanit20normalMain = GoogleFonts.kanit(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
   color: mainColor,
 );

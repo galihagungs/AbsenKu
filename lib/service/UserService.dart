@@ -20,7 +20,6 @@ class UserService {
 
       if (res.statusCode == 200) {
         PreferenceHandler.saveToken(response.data!.token.toString());
-        PreferenceHandler.saveId(response.data!.user!.id.toString());
 
         return true;
       } else {
@@ -47,7 +46,6 @@ class UserService {
       final AuthModel response = AuthModel.fromJson(res.data);
       if (res.statusCode == 200) {
         PreferenceHandler.saveToken(response.data!.token.toString());
-        PreferenceHandler.saveId(response.data!.user!.id.toString());
         return true;
       }
     } catch (e) {
@@ -62,6 +60,29 @@ class UserService {
     try {
       final res = await dio.get(
         "${UrlData.url}/api/profile",
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+      return ProfileModel.fromJson(res.data);
+    } on DioException catch (e) {
+      showToast(e.response!.data['message'], success: false);
+      return ProfileModel.fromJson({});
+    }
+  }
+
+  Future<ProfileModel> updateProfile({
+    required String email,
+    required String nama,
+  }) async {
+    String token = await PreferenceHandler.getToken();
+    try {
+      final res = await dio.put(
+        "${UrlData.url}/api/profile",
+        data: {"name": nama, "email": email},
         options: Options(
           headers: {
             'Accept': 'application/json',

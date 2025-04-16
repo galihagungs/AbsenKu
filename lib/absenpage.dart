@@ -4,7 +4,6 @@ import 'package:absenku/bloc/absenPage/absenPageBloc/absen_page_bloc.dart';
 import 'package:absenku/bloc/absenPage/buttonCheckOut/button_check_out_bloc.dart';
 import 'package:absenku/bloc/absenPage/buttonCheckin/button_check_in_bloc.dart';
 import 'package:absenku/homepage.dart';
-import 'package:absenku/service/pref_handler.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:absenku/utils/wiget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -13,9 +12,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:toastification/toastification.dart';
 
 class Absenpage extends StatefulWidget {
   const Absenpage({super.key});
@@ -97,7 +93,10 @@ class _AbsenpageState extends State<Absenpage> {
                       backgroundColor: Colors.white,
                       child: IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Homepage()),
+                          );
                         },
                         icon: Icon(FluentIcons.arrow_left_20_filled),
                       ),
@@ -253,8 +252,7 @@ class _AbsenpageState extends State<Absenpage> {
                                                       children: [
                                                         Text(
                                                           "Detail",
-                                                          style:
-                                                              kanit16normalBold,
+                                                          style: kanit16Bold,
                                                         ),
                                                         SizedBox(height: 10),
                                                         Row(
@@ -432,8 +430,7 @@ class _AbsenpageState extends State<Absenpage> {
                                                       children: [
                                                         Text(
                                                           "Detail",
-                                                          style:
-                                                              kanit16normalBold,
+                                                          style: kanit16Bold,
                                                         ),
                                                         SizedBox(height: 10),
                                                         Row(
