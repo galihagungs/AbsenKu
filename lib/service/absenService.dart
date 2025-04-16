@@ -130,7 +130,6 @@ class Absenservice {
 
   Future<absenModel> delete({required int idAbsen}) async {
     String token = await PreferenceHandler.getToken();
-    showToast(idAbsen.toString(), success: false);
     try {
       final res = await dio.delete(
         "${UrlData.url}/api/absen/$idAbsen",
@@ -141,7 +140,6 @@ class Absenservice {
           },
         ),
       );
-      print(res.data);
       return absenModel.fromJson(res.data, res.statusCode);
     } on DioException catch (e) {
       return absenModel.fromJson(e.response!.data, e.response!.statusCode);

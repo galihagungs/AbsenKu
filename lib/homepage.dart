@@ -542,32 +542,26 @@ class _HomepageState extends State<Homepage> {
                                                         alertText:
                                                             "Apa anda yakin menghapus absen ini?",
                                                         funcYes: () {
-                                                          // context
-                                                          //     .read<
-                                                          //       DeleteIzinBloc
-                                                          //     >()
-                                                          //     .add(
-                                                          //       DeleteIzin(
-                                                          //         idAbsen: int.parse(
-                                                          //           state
-                                                          //               .data
-                                                          //               .listdata![index]
-                                                          //               .id
-                                                          //               .toString(),
-                                                          //         ),
-                                                          //       ),
-                                                          //     );
+                                                          context
+                                                              .read<
+                                                                DeleteIzinBloc
+                                                              >()
+                                                              .add(
+                                                                DeleteIzin(
+                                                                  idAbsen: int.parse(
+                                                                    state
+                                                                        .data
+                                                                        .listdata![index]
+                                                                        .id
+                                                                        .toString(),
+                                                                  ),
+                                                                ),
+                                                              );
 
                                                           // showToast(),
                                                           Navigator.pop(
                                                             context,
                                                           );
-
-                                                          context
-                                                              .read<
-                                                                HistoryAbsenHomeBloc
-                                                              >()
-                                                              .add(GetData());
                                                         },
                                                         funcNo: () {
                                                           Navigator.pop(
@@ -585,52 +579,67 @@ class _HomepageState extends State<Homepage> {
                                                 ),
                                               ),
                                             ),
-                                            // BlocListener<
-                                            //   DeleteIzinBloc,
-                                            //   DeleteIzinState
-                                            // >(
-                                            //   listener: (context, state) {
-                                            //     if (state
-                                            //         is DeleteIzinLoading) {
-                                            //       showDialog(
-                                            //         context: context,
-                                            //         builder: (
-                                            //           BuildContext context,
-                                            //         ) {
-                                            //           return Dialog(
-                                            //             backgroundColor:
-                                            //                 Colors.transparent,
-                                            //             insetPadding:
-                                            //                 EdgeInsets.all(20),
-                                            //             child: Container(
-                                            //               width:
-                                            //                   double.infinity,
-                                            //               height: 320,
-                                            //               decoration: BoxDecoration(
-                                            //                 borderRadius:
-                                            //                     BorderRadius.circular(
-                                            //                       15,
-                                            //                     ),
-                                            //                 color: Colors.white,
-                                            //               ),
-                                            //               padding:
-                                            //                   EdgeInsets.fromLTRB(
-                                            //                     20,
-                                            //                     50,
-                                            //                     20,
-                                            //                     20,
-                                            //                   ),
-                                            //             ),
-                                            //           );
-                                            //         },
-                                            //       );
-                                            //     } else if (state
-                                            //         is DeleteIzinSuccess) {
-                                            //       Navigator.pop(context);
-                                            //     }
-                                            //   },
-                                            //   child: Container(),
-                                            // ),
+                                            BlocListener<
+                                              DeleteIzinBloc,
+                                              DeleteIzinState
+                                            >(
+                                              listener: (context, state) {
+                                                if (state
+                                                    is DeleteIzinLoading) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (
+                                                      BuildContext context,
+                                                    ) {
+                                                      return Dialog(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        insetPadding:
+                                                            EdgeInsets.all(20),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 320,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  15,
+                                                                ),
+                                                            color: Colors.white,
+                                                          ),
+                                                          padding:
+                                                              EdgeInsets.fromLTRB(
+                                                                20,
+                                                                50,
+                                                                20,
+                                                                20,
+                                                              ),
+                                                          child: Center(
+                                                            child: Lottie.asset(
+                                                              'assets/images/loadinganimation.json',
+                                                              width: 50,
+                                                              repeat: false,
+                                                              fit:
+                                                                  BoxFit
+                                                                      .fitWidth,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                } else if (state
+                                                    is DeleteIzinSuccess) {
+                                                  Navigator.pop(context);
+                                                  context
+                                                      .read<
+                                                        HistoryAbsenHomeBloc
+                                                      >()
+                                                      .add(GetData());
+                                                }
+                                              },
+                                              child: Container(),
+                                            ),
                                           ],
                                         ),
                                       );
