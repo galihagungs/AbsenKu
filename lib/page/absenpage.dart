@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:absenku/bloc/absenPage/absenPageBloc/absen_page_bloc.dart';
 import 'package:absenku/bloc/absenPage/buttonCheckOut/button_check_out_bloc.dart';
 import 'package:absenku/bloc/absenPage/buttonCheckin/button_check_in_bloc.dart';
-import 'package:absenku/homepage.dart';
+import 'package:absenku/page/homepage.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:absenku/utils/wiget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';

@@ -1,5 +1,5 @@
-import 'package:absenku/homepage.dart';
-import 'package:absenku/login.dart';
+import 'package:absenku/page/homepage.dart';
+import 'package:absenku/page/login.dart';
 import 'package:absenku/service/pref_handler.dart';
 import 'package:absenku/utils/utils.dart';
 // import 'package:flutter/foundation.dart';

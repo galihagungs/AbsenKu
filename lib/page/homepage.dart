@@ -1,11 +1,11 @@
-import 'package:absenku/absenpage.dart';
-import 'package:absenku/allhistory.dart';
+import 'package:absenku/page/absenpage.dart';
+import 'package:absenku/page/allhistory.dart';
 import 'package:absenku/bloc/userHomepage/Home/history_absen_home_bloc.dart';
 import 'package:absenku/bloc/userHomepage/deleteIzin/delete_izin_bloc.dart';
 import 'package:absenku/bloc/userHomepage/izin/button_izin_bloc.dart';
 import 'package:absenku/bloc/userHomepage/userprofile/user_home_page_bloc.dart';
-import 'package:absenku/onboarding.dart';
-import 'package:absenku/profile.dart';
+import 'package:absenku/page/onboarding.dart';
+import 'package:absenku/page/profile.dart';
 import 'package:absenku/service/UserService.dart';
 import 'package:absenku/service/absenService.dart';
 import 'package:absenku/service/pref_handler.dart';

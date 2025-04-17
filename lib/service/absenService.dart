@@ -96,6 +96,58 @@ class Absenservice {
     }
   }
 
+  Future<absenModel> getHistoryPage() async {
+    String token = await PreferenceHandler.getToken();
+    // DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    try {
+      final res = await dio.get(
+        "${UrlData.url}/api/absen/history",
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+
+      return absenModel.fromListJson(res.data);
+    } on DioException catch (e) {
+      return absenModel.fromJson(e.response!.data, e.response!.statusCode);
+    }
+  }
+
+  Future<absenModel> getHistoryFilterPage({
+    required DateTime? startDate,
+    required DateTime? endDate,
+  }) async {
+    String token = await PreferenceHandler.getToken();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    try {
+      final res = await dio.get(
+        "${UrlData.url}/api/absen/history",
+        queryParameters:
+            startDate == null && endDate == null
+                ? {
+                  'start': dateFormat.format(startDate ?? DateTime.now()),
+                  'end': dateFormat.format(endDate ?? DateTime.now()),
+                }
+                : null,
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+      print(res.data);
+
+      return absenModel.fromListJson(res.data);
+    } on DioException catch (e) {
+      showToast(e.message.toString(), success: false);
+      return absenModel.fromJson(e.response!.data, e.response!.statusCode);
+    }
+  }
+
   Future<absenModel> izin({
     required double lat,
     required double long,
