@@ -46,7 +46,7 @@ TextStyle kanit16Bold = GoogleFonts.kanit(
   fontWeight: FontWeight.w700,
 );
 
-TextStyle kanit16normalBoldWhite = GoogleFonts.kanit(
+TextStyle kanit16BoldWhite = GoogleFonts.kanit(
   fontSize: 16,
   fontWeight: FontWeight.w700,
   color: Colors.white,

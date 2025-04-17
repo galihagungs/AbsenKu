@@ -34,7 +34,7 @@ class Absenservice {
 
       return absenModel.fromJson(res.data, res.statusCode);
     } on DioException catch (e) {
-      showToast(e.response!.data['message'], success: false);
+      // showToast(e.response!.data['message'], success: false);
       return absenModel.fromJson(e.response!.data, e.response!.statusCode);
     }
   }
@@ -65,7 +65,7 @@ class Absenservice {
 
       return absenModel.fromJson(res.data, res.statusCode);
     } on DioException catch (e) {
-      showToast(e.response!.data['message'], success: false);
+      // showToast(e.response!.data['message'], success: false);
       return absenModel.fromJson(e.response!.data, e.response!.statusCode);
     }
   }

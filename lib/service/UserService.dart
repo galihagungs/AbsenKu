@@ -23,11 +23,9 @@ class UserService {
 
         return true;
       } else {
-        showToast(res.statusMessage.toString(), success: false);
         return false;
       }
-    } catch (e) {
-      showToast(e.toString(), success: false);
+    } on DioException catch (e) {
       return false;
     }
   }
@@ -69,7 +67,7 @@ class UserService {
       );
       return ProfileModel.fromJson(res.data);
     } on DioException catch (e) {
-      showToast(e.response!.data['message'], success: false);
+      // showToast(e.response!.data['message'], success: false);
       return ProfileModel.fromJson({});
     }
   }
@@ -92,7 +90,7 @@ class UserService {
       );
       return ProfileModel.fromJson(res.data);
     } on DioException catch (e) {
-      showToast(e.response!.data['message'], success: false);
+      // showToast(e.response!.data['message'], success: false);
       return ProfileModel.fromJson({});
     }
   }

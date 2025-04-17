@@ -1,4 +1,5 @@
 import 'package:absenku/absenpage.dart';
+import 'package:absenku/allhistory.dart';
 import 'package:absenku/bloc/userHomepage/Home/history_absen_home_bloc.dart';
 import 'package:absenku/bloc/userHomepage/deleteIzin/delete_izin_bloc.dart';
 import 'package:absenku/bloc/userHomepage/izin/button_izin_bloc.dart';
@@ -147,7 +148,7 @@ class _HomepageState extends State<Homepage> {
                                     Text(
                                       state.data.data?.name.toString() ??
                                           "User",
-                                      style: kanit16normalBoldWhite,
+                                      style: kanit16BoldWhite,
                                     ),
                                     Text(
                                       state.data.data?.email.toString() ??
@@ -321,10 +322,36 @@ class _HomepageState extends State<Homepage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("History", style: kanit20BoldMain),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "History",
+                                    style: kanit20BoldMain,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Allhistory(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text("Lihat Semua"),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+
                           BlocBuilder<
                             HistoryAbsenHomeBloc,
                             HistoryAbsenHomeState
@@ -617,7 +644,7 @@ class _HomepageState extends State<Homepage> {
                                                           child: Center(
                                                             child: Lottie.asset(
                                                               'assets/images/loadinganimation.json',
-                                                              width: 50,
+                                                              width: 200,
                                                               repeat: false,
                                                               fit:
                                                                   BoxFit
@@ -713,10 +740,11 @@ class _HomepageState extends State<Homepage> {
                     hintText: "Alasan",
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 25),
                 BlocConsumer<ButtonIzinBloc, ButtonIzinState>(
                   listener: (context, state) {
                     if (state is ButtonIzinSuccses) {
+                      alasanIzin.clear();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -725,7 +753,7 @@ class _HomepageState extends State<Homepage> {
                             insetPadding: EdgeInsets.all(20),
                             child: Container(
                               width: double.infinity,
-                              height: 320,
+                              height: 330,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.white,
@@ -752,23 +780,21 @@ class _HomepageState extends State<Homepage> {
                                     textAlign: TextAlign.center,
                                     style: kanit20Bold,
                                   ),
-                                  SizedBox(height: 25),
-                                  Expanded(
-                                    child: uniButton(
-                                      context,
-                                      title: Text(
-                                        "OK",
-                                        style: kanit16normalWhite,
-                                      ),
-                                      func: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        context
-                                            .read<HistoryAbsenHomeBloc>()
-                                            .add(GetData());
-                                      },
-                                      warna: mainColor,
+                                  SizedBox(height: 50),
+                                  uniButton(
+                                    context,
+                                    title: Text(
+                                      "OK",
+                                      style: kanit16normalWhite,
                                     ),
+                                    func: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      context.read<HistoryAbsenHomeBloc>().add(
+                                        GetData(),
+                                      );
+                                    },
+                                    warna: mainColor,
                                   ),
                                 ],
                               ),
@@ -783,7 +809,7 @@ class _HomepageState extends State<Homepage> {
                       return Center(
                         child: Lottie.asset(
                           'assets/images/loadinganimation.json',
-                          width: 50,
+                          width: 100,
                           repeat: false,
                           fit: BoxFit.fitWidth,
                         ),

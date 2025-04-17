@@ -138,18 +138,74 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => Homepage()),
         );
       } else {
+        popAlertLogin(
+          context,
+          lottieAddress: 'assets/images/alert.json',
+          title: "Error Credential\n Pastikan Email dan Password anda benar",
+          isAlert: true,
+        );
         setState(() {
           isLoading = false;
         });
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          duration: Duration(seconds: 2),
-          content: const Text('Lengkapi Form Login'),
-        ),
+      popAlertLogin(
+        context,
+        lottieAddress: 'assets/images/information.json',
+        title: "Tolong Lengkapi From !",
+        isAlert: false,
       );
     }
+  }
+
+  Future<dynamic> popAlertLogin(
+    BuildContext context, {
+    required String lottieAddress,
+    required String title,
+    required bool isAlert,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: Container(
+            width: double.infinity,
+            height: isAlert ? 390 : 320,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              children: [
+                Lottie.asset(
+                  lottieAddress,
+                  width: 100,
+                  repeat: false,
+                  fit: BoxFit.fitWidth,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  title,
+                  style: kanit20BoldMain,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 50),
+                uniButton(
+                  context,
+                  title: Text("OK", style: kanit16BoldWhite),
+                  func: () {
+                    Navigator.pop(context);
+                  },
+                  warna: mainColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

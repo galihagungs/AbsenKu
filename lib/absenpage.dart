@@ -174,141 +174,7 @@ class _AbsenpageState extends State<Absenpage> {
                           BlocConsumer<ButtonCheckInBloc, ButtonCheckInState>(
                             listener: (context, state) {
                               if (state is ButtonCheckSucsess) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      insetPadding: EdgeInsets.all(20),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 480,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                          color: Colors.white,
-                                        ),
-                                        padding: EdgeInsets.fromLTRB(
-                                          20,
-                                          50,
-                                          20,
-                                          20,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  state.data.statusCode == 200
-                                                      ? LottieBuilder.asset(
-                                                        'assets/images/check.json',
-                                                        width: 100,
-                                                        // fit: BoxFit.cover,
-                                                        repeat: false,
-                                                        alignment:
-                                                            Alignment.center,
-                                                      )
-                                                      : LottieBuilder.asset(
-                                                        'assets/images/wrong.json',
-                                                        width: 100,
-                                                        // fit: BoxFit.cover,
-                                                        repeat: false,
-                                                        alignment:
-                                                            Alignment.center,
-                                                      ),
-                                                  Text(
-                                                    state.data.message
-                                                        .toString(),
-                                                    style: kanit20Bold,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(height: 50),
-
-                                            state.data.statusCode == 200
-                                                ? Container(
-                                                  decoration: BoxDecoration(
-                                                    color: mainColor
-                                                        .withOpacity(0.4),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          16.0,
-                                                        ),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Detail",
-                                                          style: kanit16Bold,
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          children: [
-                                                            Icon(
-                                                              FluentIcons
-                                                                  .calendar_16_filled,
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Text(
-                                                              // dateFormat.format(DateTime.parse(state.data.data!.checkIn!))
-                                                              "Jumat, 24 maret 2024",
-                                                              style:
-                                                                  kanit16normal,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          children: [
-                                                            Icon(
-                                                              FluentIcons
-                                                                  .clock_16_filled,
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Text(
-                                                              "08:48",
-                                                              style:
-                                                                  kanit16normal,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        // Text(data)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                                : Container(),
-                                            SizedBox(height: 50),
-                                            uniButton(
-                                              context,
-                                              title: Text(
-                                                "Tutup",
-                                                style: kanit16normalBoldWhite,
-                                              ),
-                                              func: () {
-                                                Navigator.pop(context);
-                                              },
-                                              warna: mainColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
+                                popUpabsen(context, state: state);
                               }
                             },
                             builder: (context, state) {
@@ -330,7 +196,7 @@ class _AbsenpageState extends State<Absenpage> {
                                   context,
                                   title: Text(
                                     "Absen Masuk",
-                                    style: kanit16normalBoldWhite,
+                                    style: kanit16BoldWhite,
                                   ),
                                   func: () {
                                     context.read<ButtonCheckInBloc>().add(
@@ -352,141 +218,7 @@ class _AbsenpageState extends State<Absenpage> {
                           BlocConsumer<ButtonCheckOutBloc, ButtonCheckOutState>(
                             listener: (context, state) {
                               if (state is ButtonCheckOutSucsess) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      insetPadding: EdgeInsets.all(20),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 480,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                          color: Colors.white,
-                                        ),
-                                        padding: EdgeInsets.fromLTRB(
-                                          20,
-                                          50,
-                                          20,
-                                          20,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  state.model.statusCode == 200
-                                                      ? LottieBuilder.asset(
-                                                        'assets/images/check.json',
-                                                        width: 100,
-                                                        // fit: BoxFit.cover,
-                                                        repeat: false,
-                                                        alignment:
-                                                            Alignment.center,
-                                                      )
-                                                      : LottieBuilder.asset(
-                                                        'assets/images/wrong.json',
-                                                        width: 100,
-                                                        // fit: BoxFit.cover,
-                                                        repeat: false,
-                                                        alignment:
-                                                            Alignment.center,
-                                                      ),
-                                                  Text(
-                                                    state.model.message
-                                                        .toString(),
-                                                    style: kanit20Bold,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(height: 50),
-
-                                            state.model.statusCode == 200
-                                                ? Container(
-                                                  decoration: BoxDecoration(
-                                                    color: mainColor
-                                                        .withOpacity(0.4),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          16.0,
-                                                        ),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Detail",
-                                                          style: kanit16Bold,
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          children: [
-                                                            Icon(
-                                                              FluentIcons
-                                                                  .calendar_16_filled,
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Text(
-                                                              // dateFormat.format(DateTime.parse(state.data.data!.checkIn!))
-                                                              "Jumat, 24 maret 2024",
-                                                              style:
-                                                                  kanit16normal,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          children: [
-                                                            Icon(
-                                                              FluentIcons
-                                                                  .clock_16_filled,
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Text(
-                                                              "08:48",
-                                                              style:
-                                                                  kanit16normal,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        // Text(data)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                                : Container(),
-                                            SizedBox(height: 50),
-                                            uniButton(
-                                              context,
-                                              title: Text(
-                                                "Tutup",
-                                                style: kanit16normalBoldWhite,
-                                              ),
-                                              func: () {
-                                                Navigator.pop(context);
-                                              },
-                                              warna: mainColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
+                                popUpabsen(context, stateOut: state);
                               }
                             },
                             builder: (context, state) {
@@ -508,7 +240,7 @@ class _AbsenpageState extends State<Absenpage> {
                                   context,
                                   title: Text(
                                     "Absen Keluar",
-                                    style: kanit16normalBoldWhite,
+                                    style: kanit16BoldWhite,
                                   ),
                                   func: () {
                                     context.read<ButtonCheckOutBloc>().add(
@@ -536,6 +268,142 @@ class _AbsenpageState extends State<Absenpage> {
           return Center(child: Text("Failed Load Data"));
         },
       ),
+    );
+  }
+
+  Future<dynamic> popUpabsen(
+    BuildContext context, {
+    ButtonCheckSucsess? state,
+    ButtonCheckOutSucsess? stateOut,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: Container(
+            width: double.infinity,
+            height:
+                state != null
+                    ? state.data.statusCode == 200
+                        ? 480
+                        : 330
+                    : stateOut?.model.statusCode == 200
+                    ? 480
+                    : 330,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      (state != null
+                                  ? state.data.statusCode
+                                  : stateOut?.model.statusCode) ==
+                              200
+                          ? LottieBuilder.asset(
+                            'assets/images/check.json',
+                            width: 100,
+                            // fit: BoxFit.cover,
+                            repeat: false,
+                            alignment: Alignment.center,
+                          )
+                          : LottieBuilder.asset(
+                            'assets/images/wrong.json',
+                            width: 100,
+                            // fit: BoxFit.cover,
+                            repeat: false,
+                            alignment: Alignment.center,
+                          ),
+                      Text(
+                        state != null
+                            ? state.data.message.toString()
+                            : stateOut!.model.message.toString(),
+                        style: kanit20Bold,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height:
+                      (state != null
+                                  ? state.data.statusCode
+                                  : stateOut!.model.statusCode) ==
+                              200
+                          ? 50
+                          : 5,
+                ),
+
+                (state != null
+                            ? state.data.statusCode
+                            : stateOut!.model.statusCode) ==
+                        200
+                    ? Container(
+                      decoration: BoxDecoration(
+                        color: mainColor.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Detail", style: kanit16Bold),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(FluentIcons.calendar_16_filled),
+                                SizedBox(width: 10),
+                                Text(
+                                  // dateFormat.format(DateTime.parse(state.data.data!.checkIn!))
+                                  "Jumat, 24 maret 2024",
+                                  style: kanit16normal,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(FluentIcons.clock_16_filled),
+                                SizedBox(width: 10),
+                                Text("08:48", style: kanit16normal),
+                              ],
+                            ),
+                            // Text(data)
+                          ],
+                        ),
+                      ),
+                    )
+                    : Container(),
+                SizedBox(
+                  height:
+                      (state != null
+                                  ? state.data.statusCode
+                                  : stateOut!.model.statusCode) ==
+                              200
+                          ? 50
+                          : 5,
+                ),
+                uniButton(
+                  context,
+                  title: Text("Tutup", style: kanit16BoldWhite),
+                  func: () {
+                    Navigator.pop(context);
+                  },
+                  warna: mainColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
