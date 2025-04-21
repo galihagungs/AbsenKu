@@ -7,7 +7,7 @@ sealed class HistoryAbsenEvent {}
 class GetData extends HistoryAbsenEvent {}
 
 class FilterHistory extends HistoryAbsenEvent {
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final DateTime startDate;
+  final DateTime endDate;
   FilterHistory({required this.startDate, required this.endDate});
 }

@@ -117,21 +117,18 @@ class Absenservice {
   }
 
   Future<absenModel> getHistoryFilterPage({
-    required DateTime? startDate,
-    required DateTime? endDate,
+    required DateTime startDate,
+    required DateTime endDate,
   }) async {
     String token = await PreferenceHandler.getToken();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     try {
       final res = await dio.get(
         "${UrlData.url}/api/absen/history",
-        queryParameters:
-            startDate == null && endDate == null
-                ? {
-                  'start': dateFormat.format(startDate ?? DateTime.now()),
-                  'end': dateFormat.format(endDate ?? DateTime.now()),
-                }
-                : null,
+        queryParameters: {
+          'start': dateFormat.format(startDate),
+          'end': dateFormat.format(endDate),
+        },
         options: Options(
           headers: {
             'Accept': 'application/json',
@@ -139,11 +136,10 @@ class Absenservice {
           },
         ),
       );
-      print(res.data);
 
       return absenModel.fromListJson(res.data);
     } on DioException catch (e) {
-      showToast(e.message.toString(), success: false);
+      // showToast(e.message.toString(), success: false);
       return absenModel.fromJson(e.response!.data, e.response!.statusCode);
     }
   }

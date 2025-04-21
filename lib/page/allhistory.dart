@@ -5,6 +5,7 @@ import 'package:absenku/utils/wiget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -17,9 +18,10 @@ class Allhistory extends StatefulWidget {
 }
 
 class _AllhistoryState extends State<Allhistory> {
+  late ExpandedTileController _controller;
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -31,7 +33,6 @@ class _AllhistoryState extends State<Allhistory> {
     // startDate = dateFormat.format(args.value.startDate);
     endDate = args.value.endDate ?? args.value.startDate;
     // endDate = dateFormat.format(args.value.endDate ?? args.value.startDate);
-    showToast("$startDate - $endDate", success: true);
   }
 
   @override
@@ -165,6 +166,7 @@ class _AllhistoryState extends State<Allhistory> {
                 ],
               ),
             ),
+
             Expanded(
               child: BlocConsumer<HistoryAbsenBloc, HistoryAbsenState>(
                 listener: (context, state) {},
@@ -177,22 +179,89 @@ class _AllhistoryState extends State<Allhistory> {
                       fit: BoxFit.fitWidth,
                     );
                   } else if (state is HistoryAbsenSuccees) {
-                    return ListView.builder(
-                      itemCount: state.datalist.listdata!.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 50,
-                            decoration: BoxDecoration(color: mainColor),
-                            child: Text(
-                              state.datalist.listdata![index].id.toString(),
+                    if (state.datalist.listdata!.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            LottieBuilder.asset(
+                              'assets/images/empty.json',
+                              width: 100,
+                              height: 100,
+                              // fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                              fit: BoxFit.fitWidth,
                             ),
-                          ),
-                        );
-                      },
-                    );
+                            Text("Data Kosong", style: kanit20BoldMain),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return ExpandedTileList.builder(
+                        itemCount: state.datalist.listdata!.length,
+                        maxOpened: 1,
+                        // reverse: true,
+                        itemBuilder: (context, index, con) {
+                          return ExpandedTile(
+                            theme: ExpandedTileThemeData(
+                              headerColor: mainColor,
+                              headerPadding: const EdgeInsets.all(24.0),
+                              headerBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                borderSide: BorderSide(
+                                  color: mainColor,
+                                  width: 2,
+                                ),
+                              ),
+
+                              contentBackgroundColor: Colors.lightBlueAccent,
+                              contentPadding: const EdgeInsets.all(16.0),
+                              contentBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.lightBlueAccent,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            controller: con,
+                            title: Text(
+                              dateFormat.format(
+                                DateTime.parse(
+                                  state.datalist.listdata![index].checkIn!,
+                                ),
+                              ),
+                              style: kanit16semiBoldMainWhite,
+                            ),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Check In : ${dateFormat.format(DateTime.parse(state.datalist.listdata![index].checkIn!))}",
+                                  style: kanit16normalWhite,
+                                ),
+                                Text(
+                                  "Check In Address:\n ${state.datalist.listdata![index].checkInAddress}",
+                                  style: kanit16normalWhite,
+                                ),
+                                Text(
+                                  "Check Out : ${dateFormat.format(DateTime.parse(state.datalist.listdata![index].checkIn!))}",
+                                  style: kanit16normalWhite,
+                                ),
+                                Text(
+                                  "Keterangan : ${state.datalist.listdata![index].status}",
+                                  style: kanit16normalWhite,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
                   return Center(
                     child: Text("Failed To Load Data", style: kanit20BoldMain),
