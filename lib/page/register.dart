@@ -1,9 +1,11 @@
 import 'package:absenku/page/homepage.dart';
 import 'package:absenku/service/UserService.dart';
+import 'package:absenku/utils/toast.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:absenku/utils/wiget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -89,23 +91,85 @@ class _RegisterPageState extends State<RegisterPage> {
               title: Text("Register", style: kanit16semiBoldMainWhite),
               warna: mainColor,
               func: () async {
-                bool status = await UserService().register(
-                  email: _email.text,
-                  password: _password.text,
-                  nama: _nama.text,
-                );
-                if (status == true) {
-                  Navigator.pushReplacement(
-                    // ignore: use_build_context_synchronously
+                if (_email.text == "" ||
+                    _password.text == "" ||
+                    _nama.text == "") {
+                  popAlertRegis(
                     context,
-                    MaterialPageRoute(builder: (context) => Homepage()),
+                    lottieAddress: 'assets/images/information.json',
+                    title: "Tolong Lengkapi From !",
+                    isAlert: false,
                   );
+                } else {
+                  bool status = await UserService().register(
+                    email: _email.text,
+                    password: _password.text,
+                    nama: _nama.text,
+                  );
+                  if (status == true) {
+                    Navigator.pushReplacement(
+                      // ignore: use_build_context_synchronously
+                      context,
+                      MaterialPageRoute(builder: (context) => Homepage()),
+                    );
+                  }
                 }
               },
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> popAlertRegis(
+    BuildContext context, {
+    required String lottieAddress,
+    required String title,
+    required bool isAlert,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: Container(
+            width: double.infinity,
+            height: isAlert ? 390 : 320,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              children: [
+                Lottie.asset(
+                  lottieAddress,
+                  width: 100,
+                  repeat: false,
+                  fit: BoxFit.fitWidth,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  title,
+                  style: kanit20BoldMain,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 50),
+                uniButton(
+                  context,
+                  title: Text("OK", style: kanit16BoldWhite),
+                  func: () {
+                    Navigator.pop(context);
+                  },
+                  warna: mainColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

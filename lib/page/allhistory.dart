@@ -2,6 +2,7 @@ import 'package:absenku/bloc/historypage/historyabsen/history_absen_bloc.dart';
 import 'package:absenku/utils/toast.dart';
 import 'package:absenku/utils/utils.dart';
 import 'package:absenku/utils/wiget.dart';
+import 'package:expandable/expandable.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,8 @@ class Allhistory extends StatefulWidget {
 class _AllhistoryState extends State<Allhistory> {
   late ExpandedTileController _controller;
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+  DateFormat dateFormat2 = DateFormat("EEEE, dd MMMM yyyy");
+  DateFormat timeFormat = DateFormat("HH:mm");
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   @override
@@ -197,69 +200,177 @@ class _AllhistoryState extends State<Allhistory> {
                         ),
                       );
                     } else {
-                      return ExpandedTileList.builder(
-                        itemCount: state.datalist.listdata!.length,
-                        maxOpened: 1,
-                        // reverse: true,
-                        itemBuilder: (context, index, con) {
-                          return ExpandedTile(
-                            theme: ExpandedTileThemeData(
-                              headerColor: mainColor,
-                              headerPadding: const EdgeInsets.all(24.0),
-                              headerBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: mainColor,
-                                  width: 2,
-                                ),
-                              ),
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: state.datalist.listdata!.length,
+                          itemBuilder: (context, index) {
+                            return ExpandableNotifier(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ScrollOnExpand(
+                                        scrollOnExpand: true,
+                                        scrollOnCollapse: false,
+                                        child: ExpandablePanel(
+                                          theme: const ExpandableThemeData(
+                                            headerAlignment:
+                                                ExpandablePanelHeaderAlignment
+                                                    .center,
+                                            tapBodyToCollapse: true,
+                                          ),
+                                          header: Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  dateFormat2.format(
+                                                    DateTime.parse(
+                                                      state
+                                                          .datalist
+                                                          .listdata![index]
+                                                          .checkIn
+                                                          .toString(),
+                                                    ),
+                                                  ),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 50),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    popAlert(
+                                                      context,
+                                                      alertText:
+                                                          "Apa anda yakin menghapus absen ini?",
+                                                      funcYes: () {
+                                                        context
+                                                            .read<
+                                                              HistoryAbsenBloc
+                                                            >()
+                                                            .add(
+                                                              DeleteIzin(
+                                                                idAbsen: int.parse(
+                                                                  state
+                                                                      .datalist
+                                                                      .listdata![index]
+                                                                      .id
+                                                                      .toString(),
+                                                                ),
+                                                              ),
+                                                            );
 
-                              contentBackgroundColor: Colors.lightBlueAccent,
-                              contentPadding: const EdgeInsets.all(16.0),
-                              contentBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.lightBlueAccent,
-                                  width: 2,
+                                                        Navigator.pop(context);
+                                                      },
+                                                      funcNo: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    );
+                                                  },
+                                                  icon: Icon(
+                                                    FluentIcons
+                                                        .delete_12_regular,
+                                                    color: Colors.redAccent,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          collapsed: Container(),
+                                          expanded: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              SizedBox(height: 5),
+                                              state
+                                                          .datalist
+                                                          .listdata![index]
+                                                          .checkOut ==
+                                                      null
+                                                  ? Row(
+                                                    children: [
+                                                      Text(
+                                                        timeFormat.format(
+                                                          DateTime.parse(
+                                                            state
+                                                                .datalist
+                                                                .listdata![index]
+                                                                .checkIn
+                                                                .toString(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(" - "),
+                                                      Text(
+                                                        "Belum Pulang",
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                  : Row(
+                                                    children: [
+                                                      Text(
+                                                        timeFormat.format(
+                                                          DateTime.parse(
+                                                            state
+                                                                .datalist
+                                                                .listdata![index]
+                                                                .checkIn
+                                                                .toString(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(" - "),
+                                                      Text(
+                                                        timeFormat.format(
+                                                          DateTime.parse(
+                                                            state
+                                                                .datalist
+                                                                .listdata![index]
+                                                                .checkOut
+                                                                .toString(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                              SizedBox(height: 10),
+                                              Text(
+                                                "Tempat: ${state.datalist.listdata![index].checkInAddress.toString()}",
+                                              ),
+                                            ],
+                                          ),
+                                          builder: (_, collapsed, expanded) {
+                                            return Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10,
+                                              ),
+                                              child: Expandable(
+                                                collapsed: collapsed,
+                                                expanded: expanded,
+                                                theme:
+                                                    const ExpandableThemeData(
+                                                      crossFadePoint: 0,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            controller: con,
-                            title: Text(
-                              dateFormat.format(
-                                DateTime.parse(
-                                  state.datalist.listdata![index].checkIn!,
-                                ),
-                              ),
-                              style: kanit16semiBoldMainWhite,
-                            ),
-                            content: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Check In : ${dateFormat.format(DateTime.parse(state.datalist.listdata![index].checkIn!))}",
-                                  style: kanit16normalWhite,
-                                ),
-                                Text(
-                                  "Check In Address:\n ${state.datalist.listdata![index].checkInAddress}",
-                                  style: kanit16normalWhite,
-                                ),
-                                Text(
-                                  "Check Out : ${dateFormat.format(DateTime.parse(state.datalist.listdata![index].checkIn!))}",
-                                  style: kanit16normalWhite,
-                                ),
-                                Text(
-                                  "Keterangan : ${state.datalist.listdata![index].status}",
-                                  style: kanit16normalWhite,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       );
                     }
                   }
@@ -272,6 +383,70 @@ class _AllhistoryState extends State<Allhistory> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> popAlert(
+    BuildContext context, {
+    required String alertText,
+    required VoidCallback funcYes,
+    required VoidCallback funcNo,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: Container(
+            width: double.infinity,
+            height: 330,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              children: [
+                Lottie.asset(
+                  'assets/images/alert.json',
+                  width: 100,
+                  repeat: false,
+                  fit: BoxFit.fitWidth,
+                ),
+                SizedBox(height: 15),
+                Text(
+                  alertText,
+                  style: kanit20Bold,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 25),
+                Row(
+                  children: [
+                    Expanded(
+                      child: uniButton(
+                        context,
+                        title: Text("Ya", style: kanit16normalWhite),
+                        func: funcYes,
+                        warna: mainColor,
+                      ),
+                    ),
+                    SizedBox(width: 25),
+                    Expanded(
+                      child: uniButton(
+                        context,
+                        title: Text("Tidak", style: kanit16normalWhite),
+                        func: funcNo,
+                        warna: mainColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

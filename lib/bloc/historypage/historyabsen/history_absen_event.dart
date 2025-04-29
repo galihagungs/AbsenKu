@@ -11,3 +11,9 @@ class FilterHistory extends HistoryAbsenEvent {
   final DateTime endDate;
   FilterHistory({required this.startDate, required this.endDate});
 }
+
+class DeleteIzin extends HistoryAbsenEvent {
+  final int idAbsen;
+
+  DeleteIzin({required this.idAbsen});
+}

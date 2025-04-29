@@ -144,9 +144,6 @@ class _AbsenpageState extends State<Absenpage> {
                           SizedBox(width: 50, child: Divider(thickness: 3)),
                           SizedBox(height: 25),
                           SizedBox(
-                            // decoration: BoxDecoration(
-                            //   color: Colors.greenAccent,
-                            // ),
                             width: 300,
                             child: Row(
                               children: [

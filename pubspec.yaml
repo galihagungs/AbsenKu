@@ -52,6 +52,7 @@ dependencies:
   google_maps_flutter: ^2.12.1
   syncfusion_flutter_datepicker: ^29.1.38
   flutter_expanded_tile: ^0.4.0
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:

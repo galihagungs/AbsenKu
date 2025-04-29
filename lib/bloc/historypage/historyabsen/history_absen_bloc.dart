@@ -20,6 +20,11 @@ class HistoryAbsenBloc extends Bloc<HistoryAbsenEvent, HistoryAbsenState> {
           endDate: event.endDate,
         );
         emit(HistoryAbsenSuccees(datalist: data));
+      } else if (event is DeleteIzin) {
+        emit(HistoryAbsenLoading());
+        await Absenservice().delete(idAbsen: event.idAbsen);
+        absenModel data = await Absenservice().getHistoryPage();
+        emit(HistoryAbsenSuccees(datalist: data));
       }
     });
   }

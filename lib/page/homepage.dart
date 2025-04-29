@@ -42,10 +42,6 @@ class _HomepageState extends State<Homepage> {
       "name": "Izin",
       "icon": Icon(FluentIcons.calendar_agenda_20_filled, color: mainColor),
     },
-    {
-      "name": "Kalender",
-      "icon": Icon(FluentIcons.calendar_20_filled, color: mainColor),
-    },
   ];
 
   @override
@@ -277,44 +273,26 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: ListView.builder(
-                        itemCount: menuList.length,
-                        scrollDirection: Axis.horizontal,
-                        itemExtent: 120,
-
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              switch (index) {
-                                case 0:
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Profile(),
-                                    ),
-                                  );
-                                  break;
-                                case 1:
-                                  izinPOP(context);
-                                  break;
-                                default:
-                              }
-                            },
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Column(
-                                children: [
-                                  menuList[index]['icon'],
-                                  Text(
-                                    menuList[index]['name'].toString(),
-                                    style: kanit16BoldMain,
-                                  ),
-                                ],
-                              ),
-                            ),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Profile()),
                           );
                         },
+                        child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Column(
+                            children: [
+                              Icon(
+                                FluentIcons.person_20_filled,
+                                color: mainColor,
+                              ),
+                              Text("Profile", style: kanit16BoldMain),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                     Expanded(
